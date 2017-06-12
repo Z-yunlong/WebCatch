@@ -30,5 +30,21 @@ public class WebTest {
         }
         ExcelUtils.generatorExcel(companyInfos, new String[]{"公司名称", "联系人名称", "电话号码", "主营"}, "/Users/lonecloud/Desktop/1.xls");
     }
+    @Test
+    public void myTestWeb2() throws IOException, IllegalAccessException {
+    	List<CompanyInfo> companyInfos = new ArrayList<>();
+    	for (int i = 0; i < 10; i++) {
+    		try {
+    			System.out.println("开始-------------------第"+i+"页");
+    			companyInfos.addAll(WaperUtils.catchWebByUrl("http://b2b.huangye88.com/beijing/shenghuo/pn" + i));
+    			System.out.println("结束-------------------第"+i+"页");
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    		}
+    		
+    		
+    	}
+    	ExcelUtils.generatorExcel(companyInfos, new String[]{"公司名称", "联系人名称", "电话号码", "主营"}, "C:/Users/xujx5/Desktop/1.xls");
+    }
 
 }
