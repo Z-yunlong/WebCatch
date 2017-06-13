@@ -25,6 +25,7 @@ import java.util.List;
  * @author lonecloud
  *         用于对黄页88页面抓取用户工具http://b2b.huangye88.com/beijing/shenghuo/
  */
+@Deprecated
 public class WaperUtils {
 
     private WaperUtils() {

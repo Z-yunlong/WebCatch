@@ -10,44 +10,46 @@ import org.jsoup.select.Elements;
 
 import cn.lonecloud.bean.CompanyInfo;
 import cn.lonecloud.tools.itf.AbstractWebReptile;
+
 /**
  * 用于对黄页88页面抓取用户工具http://b2b.huangye88.com/beijing/shenghuo/
- * @author lonecloud
  *
+ * @author lonecloud
  */
 public class CatchPageTool extends AbstractWebReptile<CompanyInfo> {
 
-	@Override
-	protected List<CompanyInfo> analyzeHTMLByString(String html) {
-		 List<CompanyInfo> companyInfoList = new ArrayList<>(10);
-	        Document document = Jsoup.parse(html);
-	        //获取form
-	        Element form = document.getElementById("jubao");
-	        Elements dts = form.getElementsByTag("dt");
+    @Override
+    protected List<CompanyInfo> analyzeHTMLByString(String html) {
+        List<CompanyInfo> companyInfoList = new ArrayList<>(10);
+        Document document = Jsoup.parse(html);
+        //获取form
+        Element form = document.getElementById("jubao");
+        Elements dts = form.getElementsByTag("dt");
 
-	        for (int i = 0; i < dts.size(); i++) {
-	            Element dt = dts.get(i);
-	            //获取号码区域
-	            Elements eleTel = dt.getElementsByAttributeValue("itemprop", "tel");
-	            if (eleTel.size() != 0) {
-	                Element element = eleTel.get(0);
-	                Elements a = element.getElementsByTag("a");
-	                if (a.size() != 0) {
-	                    //获取号码区域
-	                    String html1 = a.get(0).html();
-	                    //获取每个公司的网址
-	                    String contactUrl = a.attr("href");
-	                    CompanyInfo companyInfo = getContactData(contactUrl);
-	                    if (companyInfo != null) {
-	                        companyInfoList.add(companyInfo);
-	                    }
-	                    System.out.println(html1);
-	                }
-	            }
-	        }
-	        return companyInfoList;
-	}
-	  /**
+        for (int i = 0; i < dts.size(); i++) {
+            Element dt = dts.get(i);
+            //获取号码区域
+            Elements eleTel = dt.getElementsByAttributeValue("itemprop", "tel");
+            if (eleTel.size() != 0) {
+                Element element = eleTel.get(0);
+                Elements a = element.getElementsByTag("a");
+                if (a.size() != 0) {
+                    //获取号码区域
+                    String html1 = a.get(0).html();
+                    //获取每个公司的网址
+                    String contactUrl = a.attr("href");
+                    CompanyInfo companyInfo = getContactData(contactUrl);
+                    if (companyInfo != null) {
+                        companyInfoList.add(companyInfo);
+                    }
+                    System.out.println(html1);
+                }
+            }
+        }
+        return companyInfoList;
+    }
+
+    /**
      * 解析公司联系人数据
      *
      * @param url
@@ -68,8 +70,10 @@ public class CatchPageTool extends AbstractWebReptile<CompanyInfo> {
                 String content = child.html();
                 if (content.contains("联系人")) {
                     //联系人
-                    info.setContactName(child.child(1).html());
-                    continue;
+                    if (child.children().size()>1&&child.child(1) != null){
+                        info.setContactName(child.child(1).html());
+                        continue;
+                    }
                 }
                 if (content.contains("手机")) {
                     //电话号码
@@ -103,12 +107,12 @@ public class CatchPageTool extends AbstractWebReptile<CompanyInfo> {
                 for (int i = 0; i < majors.length; i++) {
                     if (majors[i].contains("<a")) {
                         sb.append(subExcludeString(majors[i], ">", "<")).append(",");
-                    }else{
+                    } else {
                         sb.append(majors[i]).append(",");
                     }
                 }
                 sb.deleteCharAt(sb.lastIndexOf(","));
-                majorStr=sb.toString();
+                majorStr = sb.toString();
             }
             info.setMajor(majorStr);
         }
