@@ -4,3 +4,7 @@
 /.settings/
 .idea/
 webCatch.iml
+.Ds_store
+/out/
+META-INF/
+
